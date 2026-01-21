@@ -2,8 +2,22 @@
 // HEADER COMPONENT - Top navigation bar with search and user actions
 // ============================================================================
 import { useState } from "react";
-function Header({ currentUser, onLogout, onNavigate, setSidebarOpen, sidebarOpen }) {
+import { useNavigate } from "react-router-dom";
+import {Menu,PlaySquare,Search,LogOut} from 'lucide-react'
+import { api } from "../utils/api.js";
+import requestHandler from "../utils/requestHandler.js";
+function Header({ currentUser,setCurrentUser, setSidebarOpen, sidebarOpen }) {
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate()
+
+  async function logoutHandler(){
+    try {
+        await requestHandler(api.logout)
+        setCurrentUser(null)
+    } catch (error) {
+      console.log("Something went wrong",error)
+    }
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
@@ -16,7 +30,7 @@ function Header({ currentUser, onLogout, onNavigate, setSidebarOpen, sidebarOpen
           >
             <Menu className="w-6 h-6" />
           </button>
-          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => onNavigate('home')}>
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/home')}>
             <PlaySquare className="w-8 h-8 text-red-600" />
             <span className="text-xl font-bold hidden sm:block">VideoTube</span>
           </div>
@@ -44,14 +58,14 @@ function Header({ currentUser, onLogout, onNavigate, setSidebarOpen, sidebarOpen
             <>
               <div className="hidden md:flex items-center space-x-2 mr-4">
                 <img
-                  src={currentUser.avatar || 'https://via.placeholder.com/40'}
+                  src={currentUser.avatar?.secure_url}
                   alt={currentUser.username}
                   className="w-8 h-8 rounded-full"
                 />
                 <span className="font-medium text-sm">{currentUser.username}</span>
               </div>
               <button
-                onClick={onLogout}
+                onClick={logoutHandler}
                 className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
               >
                 <LogOut className="w-4 h-4" />
@@ -61,13 +75,13 @@ function Header({ currentUser, onLogout, onNavigate, setSidebarOpen, sidebarOpen
           ) : (
             <>
               <button
-                onClick={() => onNavigate('login')}
+                onClick={() => navigate('/login')}
                 className="px-4 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition"
               >
                 Login
               </button>
               <button
-                onClick={() => onNavigate('register')}
+                onClick={() => navigate('/register')}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
               >
                 Sign Up
