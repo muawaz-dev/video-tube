@@ -39,7 +39,7 @@ function ChannelProfilePage({ currentUser }) {
     const handleSubscribe = async () => {
         if (!currentUser) return;
         try {
-            await requestHandler(api.toggleSubscription, currentUser._id);
+            await requestHandler(api.toggleSubscription, channel._id);
             setIsSubscribed(!isSubscribed);
         } catch (error) {
             console.error('Failed to toggle subscription:', error);

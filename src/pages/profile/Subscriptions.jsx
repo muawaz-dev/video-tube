@@ -18,8 +18,7 @@ function SubscriptionsPage({ currentUser }) {
     const fetchTweets = async () => {
         try {
             const result = await requestHandler(api.subscribedTo)
-            console.log(result.data)
-            setSubscriptions(result.data.subscribedTo || []);
+            setSubscriptions(result.data || []);
         } catch (error) {
             console.error('Failed to fetch tweets:', error);
         }
@@ -62,25 +61,25 @@ function SubscriptionsPage({ currentUser }) {
             <div className="space-y-4">
                 {subscriptions.map((subscription) => (
                     <div
-                        onClick={()=>handleSubscriberClick(subscription?.username)}
-                        key={subscription._id} className="bg-white rounded-lg shadow-md p-6">
+                        onClick={()=>handleSubscriberClick(subscription?.subscription.username)}
+                        key={subscription.subscription._id} className="bg-white rounded-lg shadow-md p-6">
                         <div className="flex items-start justify-between">
                             <div className="flex space-x-3 flex-1 items-center">
                                 <img
-                                    src={subscription?.avatar.secure_url || 'https://via.placeholder.com/48'}
-                                    alt={subscription?.username}
+                                    src={subscription?.subscription.avatar.secure_url || 'https://via.placeholder.com/48'}
+                                    alt={subscription?.subscription.username}
                                     className="w-12 h-12 rounded-full"
                                 />
                                 <div className="flex-1">
                                     <div className="flex items-center space-x-2 mb-1">
-                                        <span className="font-semibold">{subscription?.username}</span>
+                                        <span className="font-semibold">{subscription?.subscription.username}</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center">
                                     <div
                                         className="bg-gray-50 p-2 rounded-lg text-center flex flex-col">
                                         <Users className="w-4 h-4 mx-auto mb-2 text-red-600" />
-                                        <p className="text-xl">{subscription?.subscribers || 0}</p>
+                                        <p className="text-xl">{subscription?.subscription.subscribers || 0}</p>
                                     </div>
                                 </div>
                             </div>

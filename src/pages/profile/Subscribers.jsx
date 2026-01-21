@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { api } from "../../utils/api.js";
 import requestHandler from "../../utils/requestHandler.js";
 import { useNavigate } from "react-router-dom";
-import {Users} from 'lucide-react'
+import { Users } from 'lucide-react'
 
 function SubscribersPage({ currentUser }) {
     const [subscribers, setSubscribers] = useState([]);
@@ -19,7 +19,8 @@ function SubscribersPage({ currentUser }) {
     const fetchTweets = async () => {
         try {
             const result = await requestHandler(api.subscribers)
-            setSubscribers(result.data.subscribers || []);
+            setSubscribers(result.data || []);
+
         } catch (error) {
             console.error('Failed to fetch tweets:', error);
         }
@@ -27,6 +28,10 @@ function SubscribersPage({ currentUser }) {
             setLoading(false)
         }
     };
+
+    function handleSubscriberClick(username) {
+        navigate(`/channel/${username}`)
+    }
 
     if (!currentUser) {
         return (
@@ -41,6 +46,7 @@ function SubscribersPage({ currentUser }) {
             </div>
         )
     }
+
 
     if (loading) {
         return (
@@ -58,24 +64,26 @@ function SubscribersPage({ currentUser }) {
             {/* Tweets List Section */}
             <div className="space-y-4">
                 {subscribers.map((subscriber) => (
-                    <div key={subscriber._id} className="bg-white rounded-lg shadow-md p-6">
+                    <div
+                     onClick={()=>handleSubscriberClick(subscriber?.subscriber.username)}
+                    key={subscriber.subscriber._id} className="bg-white rounded-lg shadow-md p-6">
                         <div className="flex items-start justify-between">
                             <div className="flex space-x-3 flex-1 items-center">
                                 <img
-                                    src={subscriber?.avatar.secure_url || 'https://via.placeholder.com/48'}
-                                    alt={subscriber?.username}
+                                    src={subscriber?.subscriber.avatar.secure_url || 'https://via.placeholder.com/48'}
+                                    alt={subscriber?.subscriber.username}
                                     className="w-12 h-12 rounded-full"
                                 />
                                 <div className="flex-1">
                                     <div className="flex items-center space-x-2 mb-1">
-                                        <span className="font-semibold">{subscriber?.username}</span>
+                                        <span className="font-semibold">{subscriber?.subscriber.username}</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center">
                                     <div
                                         className="bg-gray-50 p-2 rounded-lg text-center flex flex-col">
                                         <Users className="w-4 h-4 mx-auto mb-2 text-red-600" />
-                                        <p className="text-xl">{subscriber?.subscribers || 0}</p>
+                                        <p className="text-xl">{subscriber?.subscriber.subscribers || 0}</p>
                                     </div>
                                 </div>
                             </div>
