@@ -4,11 +4,12 @@
 // ============================================================================
 import { api } from "../../utils/api.js";
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation,useParams } from "react-router-dom";
 import VideoCard from '../../components/VideoCard.jsx'
 import requestHandler from "../../utils/requestHandler.js";
 function HomePage() {
   const location = useLocation()
+  const {searchQuery} = useParams()
   const isSelecting = location.state?.isSelecting
   let initialPlaylistVideos = location.state?.playlistVideos
   const playlistId = location.state?.playlistId
@@ -19,11 +20,18 @@ function HomePage() {
 
   useEffect(() => {
     fetchVideos();
-  }, []);
+  }, [searchQuery]);
 
   const fetchVideos = async () => {
     try {
-      const result = await requestHandler(api.getAllVideos)
+      const result = await requestHandler(api.getAllVideos,{
+      params: {
+        page: 1,
+        limit: 10,
+        query: searchQuery || "",
+        sortBy: "views",
+        sortType: "-1"
+      }})
       console.log(result)
       setVideos(result.data.docs || []);
 

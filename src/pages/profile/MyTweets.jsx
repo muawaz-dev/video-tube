@@ -16,6 +16,9 @@ function MyTweetsPage({ currentUser }) {
   useEffect(() => {
     fetchTweets();
   }, []);
+  useEffect(() => {
+    setNewTweet(isEditing?.content)
+  }, [isEditing]);
 
   const fetchTweets = async () => {
     try {
@@ -28,6 +31,7 @@ function MyTweetsPage({ currentUser }) {
       setLoading(false)
     }
   };
+
 
   const handleCreateTweet = async () => {
     if (!newTweet.trim()) return;
@@ -52,8 +56,9 @@ function MyTweetsPage({ currentUser }) {
 
   const handleUpdateTweet = async () =>{
     if(!newTweet.trim()) return;
+    if(newTweet===isEditing?.content)return
     try {
-      const response = await requestHandler(api.updateTweet,{content:newTweet,tweetId:isEditing})
+      const response = await requestHandler(api.updateTweet,{content:newTweet,tweetId:isEditing.tweetId})
       setTweets(tweets.map((tweet)=>{
         if(tweet._id===response.data._id)return response.data
         return tweet
@@ -98,7 +103,7 @@ function MyTweetsPage({ currentUser }) {
           <textarea
             value={newTweet}
             onChange={(e) => setNewTweet(e.target.value)}
-            placeholder="What's on your mind?"
+            placeholder="Start typing to update"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 resize-none"
             rows="3"
           />
@@ -121,7 +126,7 @@ function MyTweetsPage({ currentUser }) {
           <textarea
             value={newTweet}
             onChange={(e) => setNewTweet(e.target.value)}
-            placeholder="What's on your mind?"
+            placeholder={"What's on your mind?"}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 resize-none"
             rows="3"
           />
@@ -162,7 +167,12 @@ function MyTweetsPage({ currentUser }) {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => setIsEditing(tweet._id)}
+                  onClick={() => setIsEditing(
+                    {
+                      content:tweet.content,
+                      tweetId:tweet._id
+                  }
+                )}
                   className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800"
                 >
                   <Edit className="w-5 h-5" />

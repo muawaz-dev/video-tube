@@ -24,7 +24,7 @@ const api = {
   }),
 
   // Video endpoints
-  getAllVideos: () => fetch(`${API_BASE_URL}/videos/all-videos`),
+  getAllVideos: ({params}) => fetch(`${API_BASE_URL}/videos/all-videos${params && "?"+new URLSearchParams(params)}`),
   getVideoById: (videoId) => fetch(`${API_BASE_URL}/videos/video/${videoId}`),
   incrementView: (videoId) => fetch(`${API_BASE_URL}/videos/increment-view/${videoId}`, {
     method: 'POST'

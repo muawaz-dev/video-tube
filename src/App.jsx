@@ -41,6 +41,7 @@ function App() {
     <>
       <Route path='/' element={<Layout currentUser={currentUser} setCurrentUser={setCurrentUser} />} >
         <Route index element={<HomePage />} />
+        <Route path=':searchQuery' element={<HomePage />} />
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/login' element={<LoginPage setCurrentUser={setCurrentUser} />} />
         <Route path='/profile' element={<ProfilePage currentUser={currentUser} />} />
