@@ -26,7 +26,9 @@ import ChannelProfilePage from './pages/channel/ChannelProfile.jsx';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
-
+  useEffect(()=>{
+    alert("The backend server is not live so you will not be able to use all features.")
+  },[])
   useEffect(() => {
     (async () => {
       try {
