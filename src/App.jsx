@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { X, AlertCircle, ExternalLink } from 'lucide-react';
 import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router-dom';
 import Layout from './pages/main/Layout.jsx';
 import HomePage from './pages/main/Home.jsx';
@@ -26,9 +27,12 @@ import ChannelProfilePage from './pages/channel/ChannelProfile.jsx';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
-  useEffect(()=>{
-    alert("The backend server is not live so you will not be able to use all features.")
-  },[])
+  const [showNotification, setShowNotification] = useState(false);
+
+  useEffect(() => {
+    // Show notification on mount
+    setShowNotification(true);
+  }, []);
   useEffect(() => {
     (async () => {
       try {
@@ -66,6 +70,36 @@ function App() {
 
   return (
     <>
+      <div className={`fixed top-0 left-0 right-0 z-[1000] p-4 flex justify-center transition-all duration-500 ease-in-out transform ${showNotification ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
+        <div className="bg-zinc-900 border border-zinc-800 text-zinc-100 px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 max-w-2xl w-full">
+          <div className="bg-amber-500/20 p-2 rounded-full">
+            <AlertCircle className="w-6 h-6 text-amber-500" />
+          </div>
+          <div className="flex-grow">
+            <p className="text-sm font-medium leading-relaxed">
+              The backend server is not live. Most interactive features will be unavailable. Check out the full working on LinkedIn post.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <a 
+              href="https://www.linkedin.com/feed/update/urn:li:activity:7421741940204855296/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 shadow-lg shadow-blue-900/20 active:scale-95"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Visit
+            </a>
+            <button 
+              onClick={() => setShowNotification(false)}
+              className="hover:bg-zinc-800 p-2 rounded-full transition-colors text-zinc-400 hover:text-zinc-100"
+              aria-label="Close notification"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </div>
 
       <RouterProvider router={router}></RouterProvider>
 
